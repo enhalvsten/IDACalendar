@@ -145,7 +145,7 @@ public class Gui {
 		}
 		int year = calendar.getCurrentYear();
 		int month = calendar.getCurrentMonth();
-		int day = calendar.getCurrentDay() - 1;
+		int day = calendar.getCurrentDay();
 		if (year < 2020 && year >= 2010) {
 			years.setSelectedIndex(year-2010);
 		}
