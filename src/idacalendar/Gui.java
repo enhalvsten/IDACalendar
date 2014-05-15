@@ -315,7 +315,7 @@ public class Gui {
 		months.setSelectedIndex(month);
 		days.setSelectedIndex(day);
 		
-		dateLbl.setText(year + " - " + (month + 1) + " - " + (day + 1));
+		dateLbl.setText(calendar.getWeekDay() + " " + year + " - " + (month + 1) + " - " + (day + 1));
 	}
 
 }
