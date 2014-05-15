@@ -4,10 +4,6 @@ import java.awt.event.*;
 import java.awt.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
-
-//import java.util.*;
 
 public class Gui {
 	private IDACalendar calendar;
@@ -16,7 +12,6 @@ public class Gui {
 	private JPanel northPanel;
 	private JPanel centerPanel;
 	private JPanel activitiesPanel;
-	private JList<Activity> activitiesList;
 	private JComboBox<String> months;
 	private JComboBox<String> years;
 	private JComboBox<String> days;
@@ -42,6 +37,9 @@ public class Gui {
 		update();
 	}
 
+	/**
+	 * Creates the GUI for the application. It is built with a border layout.
+	 */
 	private void create() {
 		JFrame guiFrame = new JFrame();
 		guiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -106,6 +104,11 @@ public class Gui {
 		guiFrame.setVisible(true);
 	}
 
+	/**
+	 * Creates the combo box for selecting the year. If a year is chosen, it
+	 * creates a new combo box for the days, in order to update the number of days.
+	 * The years 2010 to 2019 can be chosen.
+	 */
 	private void createYears() {
 		String[] yearList = new String[10];
 		for (int i = 0; i < 10; i++) {
@@ -123,6 +126,11 @@ public class Gui {
 		northPanel.add(yearPanel, 0);
 	}
 	
+	/**
+	 * Creates the combo box for selecting the month. If a month is chosen, it
+	 * creates a new combo box for the days, in order to update the number of days.
+	 * The months January through December can be chosen.
+	 */
 	private void createMonths() {
 		String[] monthList = { "January", "February", "March", "April", "May",
 				"June", "July", "August", "September", "October", "November",
@@ -140,6 +148,10 @@ public class Gui {
 		northPanel.add(monthPanel, 1);
 	}
 	
+	/**
+	 * Creates the combo box for selecting the day. It calculates the number
+	 * of days based on the year and month.
+	 */
 	private void createDays() {
 		if (days != null) {
 			northPanel.remove(dayPanel);
@@ -162,6 +174,14 @@ public class Gui {
 		northPanel.add(dayPanel, 2);
 	}
 	
+	/**
+	 * Creates the dialog window for creating a new activity, or changing an existing one.
+	 * If an activity is given as a parameter, it also creates a delete button, as well as
+	 * inserting the values given last time to the fields. Deleting prompts a pop-up window,
+	 * which asks you to confirm the deletion.
+	 * 
+	 * @param a The activity to change/delete.
+	 */
 	private void addActivity(final Activity a) {
 		final JDialog newAct = new JDialog(guiFrame, true);
 		newAct.setTitle("New Activity");
@@ -191,9 +211,13 @@ public class Gui {
 			JButton deleteBtn = new JButton("Delete");
 			buttonPanel.add(deleteBtn);
 			deleteBtn.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent event) { calendar.removeActivity(a);
-				update();
-				newAct.dispose();
+				public void actionPerformed(ActionEvent event) { int ans = JOptionPane.showConfirmDialog(newAct, 
+						"Are you certain you want to delete this activity?", "Select an Option", JOptionPane.YES_NO_OPTION);
+					if (ans == JOptionPane.YES_OPTION) {
+						calendar.removeActivity(a);
+						update();
+						newAct.dispose();
+					}
 				}
 			});
 		}
@@ -259,6 +283,11 @@ public class Gui {
 		newAct.setVisible(true);
 	}
 	
+	/**
+	 * Updates the GUI, by updating the date, both in the label and in the combo
+	 * boxes, as well as the list of activities every day. It creates a button for each activity
+	 * that, when pressed, runs the change/delete activity window.
+	 */
 	private void update() {
 		Activity[] acts = calendar.activitiesPerDay();
 		if (actPanel != null) {
