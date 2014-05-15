@@ -8,7 +8,6 @@ package idacalendar;
  * @author Isak Stensö, David Bergling & Andreas Rosenback
  * @version 2014-05-15
  */
-
 public class Activity implements Comparable<Activity> {
 	private final int YEAR;
 	private final int MONTH;
