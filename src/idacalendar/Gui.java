@@ -182,7 +182,8 @@ public class Gui {
 	 * Creates the dialog window for creating a new activity, or changing an existing one.
 	 * If an activity is given as a parameter, it also creates a delete button, as well as
 	 * inserting the values given last time to the fields. Deleting prompts a pop-up window,
-	 * which asks you to confirm the deletion.
+	 * which asks you to confirm the deletion. If the activity is not correctly filled out,
+	 * it gives the user an error message.
 	 * 
 	 * @param a The activity to change/delete.
 	 */
@@ -205,10 +206,14 @@ public class Gui {
 			public void actionPerformed(ActionEvent event) { if (a != null) {
 				calendar.removeActivity(a);
 			}
-				calendar.addActivity(startHourTxt.getText(), startMinuteTxt.getText(), 
-					endHourTxt.getText(), endMinuteTxt.getText(), nameTxt.getText(), notesTxt.getText(), locTxt.getText());
-			update();
-			newAct.dispose();
+				if (!calendar.addActivity(startHourTxt.getText(), startMinuteTxt.getText(), 
+					endHourTxt.getText(), endMinuteTxt.getText(), nameTxt.getText(), notesTxt.getText(), locTxt.getText())) {
+					JOptionPane.showMessageDialog(newAct, "The activity is not correctly filled out!", "Error", 
+							JOptionPane.ERROR_MESSAGE);
+				} else {
+					update();
+					newAct.dispose();
+				}
 			}
 		});
 		if (a != null) {

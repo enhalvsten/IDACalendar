@@ -34,7 +34,8 @@ public class IDACalendar {
 	
 	/**
 	 * Adds an Activity to the calendar, by generating a hash value for the activity, and
-	 * then placing it in the list of activities.
+	 * then placing it in the list of activities. Returns true if the activity was created,
+	 * and false if some parameter was given incorrectly.
 	 * 
 	 * @param startingHour The hour the activity starts.
 	 * @param startingMinute The exact minute the activity starts.
@@ -43,8 +44,9 @@ public class IDACalendar {
 	 * @param title The name of the activity.
 	 * @param text Extra notes about the activity.
 	 * @param place The location of the activity.
+	 * @return Whether the activity was successfully created.
 	 */
-	public void addActivity(String startingHour, String startingMinute, String endingHour,
+	public boolean addActivity(String startingHour, String startingMinute, String endingHour,
 			String endingMinute, String title, String text, String place) {
 		int startHour;
 		int startMinute;
@@ -53,16 +55,28 @@ public class IDACalendar {
 		try {
 			startHour = Integer.parseInt(startingHour);
 			startMinute = Integer.parseInt(startingMinute);
-			endHour = Integer.parseInt(endingHour);
-			endMinute = Integer.parseInt(endingMinute);
+			if (endingHour == null && endingMinute == null) {
+				endHour = 23;
+				endMinute = 59;
+			} else if (endingHour == null && endingMinute != null) {
+				endHour = startHour;
+				endMinute = Integer.parseInt(endingMinute);
+			}
+			if (endingHour != null && endingMinute == null) {
+				endHour = Integer.parseInt(endingHour);
+				endMinute = 00;
+			} else {
+				endHour = Integer.parseInt(endingHour);
+				endMinute = Integer.parseInt(endingMinute);
+			}
 		}
 		catch (NumberFormatException e){
-			return;
+			return false;
 		}
 		if (startHour > 23 || startHour < 0 || startMinute > 59
 				|| startMinute < 0 || endHour > 23 || endHour < 0
 				|| endMinute > 59 || endMinute < 0) {
-			throw new IllegalArgumentException("The given time is illegal");
+			return false;
 		}
 		Activity a = new Activity(year, month, day, startHour, startMinute,
 				endHour, endMinute, title, text, place);
@@ -71,6 +85,7 @@ public class IDACalendar {
 			activities[hash] = new LinkedList<Activity>();
 		}
 		activities[hash].add(a);
+		return true;
 	}
 
 	/**
