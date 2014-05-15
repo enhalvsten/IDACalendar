@@ -4,8 +4,6 @@ import java.awt.event.*;
 import java.awt.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
 
 //import java.util.*;
 
@@ -16,7 +14,6 @@ public class Gui {
 	private JPanel northPanel;
 	private JPanel centerPanel;
 	private JPanel activitiesPanel;
-	private JList<Activity> activitiesList;
 	private JComboBox<String> months;
 	private JComboBox<String> years;
 	private JComboBox<String> days;
@@ -191,9 +188,13 @@ public class Gui {
 			JButton deleteBtn = new JButton("Delete");
 			buttonPanel.add(deleteBtn);
 			deleteBtn.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent event) { calendar.removeActivity(a);
-				update();
-				newAct.dispose();
+				public void actionPerformed(ActionEvent event) { int ans = JOptionPane.showConfirmDialog(newAct, 
+						"Are you certain you want to delete this activity?", "Select an Option", JOptionPane.YES_NO_OPTION);
+					if (ans == JOptionPane.YES_OPTION) {
+						calendar.removeActivity(a);
+						update();
+						newAct.dispose();
+					}
 				}
 			});
 		}
