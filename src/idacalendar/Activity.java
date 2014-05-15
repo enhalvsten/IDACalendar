@@ -134,6 +134,26 @@ public class Activity implements Comparable<Activity> {
 		return endMinute;
 	}
 
+	public String getStartTime() {
+		StringBuilder sb = new StringBuilder();
+		if (startHour == 0) {
+			sb.append("00");
+		} else if (startHour < 10){
+			sb.append("0" + startHour);
+		} else {
+			sb.append(startHour);
+		}
+		sb.append(":");
+		if (startMinute == 0) {
+			sb.append("00");
+		} else if (startMinute < 10){
+			sb.append("0" + startMinute);
+		} else {
+			sb.append(startMinute);
+		}
+		return sb.toString();
+	}
+	
 	public String getTitle() {
 		return title;
 	}
@@ -145,10 +165,6 @@ public class Activity implements Comparable<Activity> {
 	public String getPlace() {
 		return place;
 	}
-
-	// @Override public int hashCode() {
-	// return YEAR/97 + 2*MONTH + 15*DAY;
-	// }
 
 	@Override
 	public boolean equals(Object o) {

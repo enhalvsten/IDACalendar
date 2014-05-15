@@ -22,6 +22,7 @@ public class Gui {
 	private JComboBox<String> days;
 	private JPanel dayPanel;
 	private JLabel dateLbl;
+	private JPanel actPanel;
 	
 	private JTextField startHourTxt;
 	private JTextField startMinuteTxt;
@@ -45,7 +46,7 @@ public class Gui {
 		JFrame guiFrame = new JFrame();
 		guiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		guiFrame.setTitle("Calendar");
-		guiFrame.setSize(400, 400);
+		guiFrame.setSize(550, 400);
 		guiFrame.setLocationRelativeTo(null);
 
 		northPanel = new JPanel();
@@ -68,14 +69,18 @@ public class Gui {
 		JButton addAct = new JButton("+");
 		northPanel.add(addAct);
 		addAct.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) { addActivity();
+			public void actionPerformed(ActionEvent event) { addActivity(null);
 			}
 		});
 		
 		JButton prevDay = new JButton("<");
+		JPanel prevDayPanel= new JPanel(new FlowLayout());
+		prevDayPanel.add(prevDay);
 		JButton nextDay = new JButton(">");
-		guiFrame.add(prevDay, BorderLayout.WEST);
-		guiFrame.add(nextDay, BorderLayout.EAST);
+		JPanel nextDayPanel= new JPanel(new FlowLayout());
+		nextDayPanel.add(nextDay);
+		guiFrame.add(prevDayPanel, BorderLayout.WEST);
+		guiFrame.add(nextDayPanel, BorderLayout.EAST);
 		prevDay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) { calendar.yesterday();
 			update();
@@ -96,7 +101,6 @@ public class Gui {
 		centerPanel.add(activitiesPanel, BorderLayout.CENTER);
 		guiFrame.add(centerPanel, BorderLayout.CENTER);
 		
-		guiFrame.pack();
 		update();
 		
 		guiFrame.setVisible(true);
@@ -158,9 +162,8 @@ public class Gui {
 		northPanel.add(dayPanel, 2);
 	}
 	
-	private void addActivity() {
-		
-		JDialog newAct = new JDialog(guiFrame, true);
+	private void addActivity(final Activity a) {
+		final JDialog newAct = new JDialog(guiFrame, true);
 		newAct.setTitle("New Activity");
 		newAct.setSize(260, 550);
 		newAct.setLocationRelativeTo(null);
@@ -175,17 +178,31 @@ public class Gui {
 		JButton saveBtn = new JButton("Save");
 		buttonPanel.add(saveBtn);
 		saveBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) { calendar.addActivity(startHourTxt.getText(), startMinuteTxt.getText(), 
+			public void actionPerformed(ActionEvent event) { if (a != null) {
+				calendar.removeActivity(a);
+			}
+				calendar.addActivity(startHourTxt.getText(), startMinuteTxt.getText(), 
 					endHourTxt.getText(), endMinuteTxt.getText(), nameTxt.getText(), notesTxt.getText(), locTxt.getText());
 			update();
+			newAct.dispose();
 			}
 		});
+		if (a != null) {
+			JButton deleteBtn = new JButton("Delete");
+			buttonPanel.add(deleteBtn);
+			deleteBtn.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent event) { calendar.removeActivity(a);
+				update();
+				newAct.dispose();
+				}
+			});
+		}
 		gridPanel.add(buttonPanel);
 		
 		JPanel namePanel = new JPanel();
 		namePanel.setLayout(new BorderLayout());
 		JLabel nameLbl = new JLabel("Activity:");
-		JTextField nameTxt = new JTextField();
+		nameTxt = new JTextField();
 		namePanel.add(nameLbl, BorderLayout.NORTH);
 		namePanel.add(nameTxt, BorderLayout.CENTER);
 		gridPanel.add(namePanel);
@@ -215,7 +232,7 @@ public class Gui {
 		JPanel locPanel = new JPanel();
 		locPanel.setLayout(new BorderLayout());
 		JLabel locLbl = new JLabel("Location:");
-		JTextField locTxt = new JTextField();
+		locTxt = new JTextField();
 		locPanel.add(locLbl, BorderLayout.NORTH);
 		locPanel.add(locTxt, BorderLayout.CENTER);
 		gridPanel.add(locPanel);
@@ -223,10 +240,20 @@ public class Gui {
 		JPanel notesPanel = new JPanel();
 		notesPanel.setLayout(new BorderLayout());
 		JLabel notesLbl = new JLabel("Notes:");
-		JTextField notesTxt = new JTextField(20);
+		notesTxt = new JTextField(20);
 		notesPanel.add(notesLbl, BorderLayout.NORTH);
 		notesPanel.add(notesTxt, BorderLayout.CENTER);
 		largeGrid.add(notesPanel);
+		
+		if (a != null) {
+			nameTxt.setText(a.getTitle());
+			locTxt.setText(a.getPlace());
+			notesTxt.setText(a.getText());
+			startHourTxt.setText(a.getStartHour() + "");
+			startMinuteTxt.setText(a.getStartMinute() + "");
+			endHourTxt.setText(a.getEndHour() + "");
+			endMinuteTxt.setText(a.getEndMinute() + "");
+		}
 		
 		newAct.add(flowPanel);
 		newAct.setVisible(true);
@@ -234,13 +261,22 @@ public class Gui {
 	
 	private void update() {
 		Activity[] acts = calendar.activitiesPerDay();
-		if (activitiesList != null) {
-			activitiesPanel.remove(activitiesList);
+		if (actPanel != null) {
+			actPanel.removeAll();
 		}
 		if (acts != null) {
-			activitiesList = new JList<Activity>(acts);
-			activitiesPanel.add(activitiesList);
+			actPanel = new JPanel(new GridLayout(acts.length, 1));
+			for (final Activity a : acts) {
+				JButton actBtn = new JButton(a.getTitle() + " - " + a.getStartTime());
+				actBtn.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent event) { addActivity(a);
+					}
+				});
+				actPanel.add(actBtn);
+			}
+			activitiesPanel.add(actPanel);
 		}
+		activitiesPanel.updateUI();
 		int year = calendar.getCurrentYear();
 		int month = calendar.getCurrentMonth();
 		int day = calendar.getCurrentDay() - 1;

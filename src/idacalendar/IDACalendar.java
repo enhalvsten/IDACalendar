@@ -47,6 +47,9 @@ public class IDACalendar {
 		Activity a = new Activity(year, month, day, startHour, startMinute,
 				endHour, endMinute, title, text, place);
 		int hash = hash(a);
+		if (activities[hash] == null) {
+			activities[hash] = new LinkedList<Activity>();
+		}
 		activities[hash].add(a);
 	}
 
