@@ -89,7 +89,34 @@ public class IDACalendar {
 			a.changePlace(newPlace);
 		}
 	}
-
+	
+	public String getWeekDay() {
+		String s = "";
+		int dayIndex = calendar.get(Calendar.DAY_OF_WEEK);
+		if (dayIndex == 1) { 
+			s = "Sunday";
+		}
+		if (dayIndex == 2) { 
+			s = "Monday";
+		}
+		if (dayIndex == 3) { 
+			s = "Tuesday";
+		}
+		if (dayIndex == 4) { 
+			s = "Wednesday";
+		}
+		if (dayIndex == 5) { 
+			s = "Thursday";
+		}
+		if (dayIndex == 6) { 
+			s = "Friday";
+		} 
+		if (dayIndex == 7) { 
+			s = "Saturday";
+		}
+		return s;
+	}
+	
 	public Activity[] activitiesPerDay() {
 		LinkedList<Activity> acts = new LinkedList<Activity>();
 		List<Activity> tableActs = activities[calendar
