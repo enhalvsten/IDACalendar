@@ -1,4 +1,5 @@
-package idacalendar;
+package INDACalendar;
+
 import java.awt.event.*;
 import java.awt.*;
 
@@ -13,12 +14,22 @@ public class Gui {
 
 	private JFrame guiFrame;
 	private JPanel northPanel;
+	private JPanel centerPanel;
 	private JPanel activitiesPanel;
-	private JList activitiesList;
-	private JComboBox months;
-	private JComboBox years;
-	private JComboBox days;
+	private JList<Activity> activitiesList;
+	private JComboBox<String> months;
+	private JComboBox<String> years;
+	private JComboBox<String> days;
 	private JPanel dayPanel;
+	private JLabel dateLbl;
+	
+	private JTextField startHourTxt;
+	private JTextField startMinuteTxt;
+	private JTextField endHourTxt;
+	private JTextField endMinuteTxt;
+	private JTextField nameTxt;
+	private JTextField notesTxt;
+	private JTextField locTxt;
 
 	public static void main(String[] args) {
 		new Gui();
@@ -49,8 +60,15 @@ public class Gui {
 		northPanel.add(setDay);
 		setDay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) { calendar.setCurrentDay(years.getSelectedIndex() 
-					+ 2010, months.getSelectedIndex(), days.getSelectedIndex());
+					+ 2010, months.getSelectedIndex(), days.getSelectedIndex() + 1);
 			update();
+			}
+		});
+		
+		JButton addAct = new JButton("+");
+		northPanel.add(addAct);
+		addAct.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) { addActivity();
 			}
 		});
 		
@@ -69,8 +87,14 @@ public class Gui {
 			}
 		});
 
-		JPanel activitiesPanel = new JPanel();
-		guiFrame.add(activitiesPanel, BorderLayout.CENTER);
+		centerPanel = new JPanel(new BorderLayout());
+		activitiesPanel = new JPanel();
+		dateLbl = new JLabel();
+		JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		datePanel.add(dateLbl);
+		centerPanel.add(datePanel, BorderLayout.NORTH);
+		centerPanel.add(activitiesPanel, BorderLayout.CENTER);
+		guiFrame.add(centerPanel, BorderLayout.CENTER);
 		
 		guiFrame.pack();
 		update();
@@ -85,7 +109,7 @@ public class Gui {
 		}
 		JPanel yearPanel = new JPanel();
 		JLabel yearLbl = new JLabel("Year:");
-		years = new JComboBox(yearList);
+		years = new JComboBox<String>(yearList);
 		years.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent event) { createDays();
 			}
@@ -101,7 +125,7 @@ public class Gui {
 				"December" };
 		JPanel monthPanel = new JPanel();
 		JLabel monthLbl = new JLabel("Month:");
-		months = new JComboBox(monthList);
+		months = new JComboBox<String>(monthList);
 		
 		months.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent event) { createDays();
@@ -128,10 +152,84 @@ public class Gui {
 		}
 		dayPanel = new JPanel();
 		JLabel dayLbl = new JLabel("Day:");
-		days = new JComboBox(dayList);
+		days = new JComboBox<String>(dayList);
 		dayPanel.add(dayLbl);
 		dayPanel.add(days);
 		northPanel.add(dayPanel, 2);
+	}
+	
+	private void addActivity() {
+		
+		JDialog newAct = new JDialog(guiFrame, true);
+		newAct.setTitle("New Activity");
+		newAct.setSize(260, 550);
+		newAct.setLocationRelativeTo(null);
+		
+		JPanel flowPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel largeGrid = new JPanel(new GridLayout(2, 1));
+		JPanel gridPanel = new JPanel(new GridLayout(5, 1));
+		largeGrid.add(gridPanel);
+		flowPanel.add(largeGrid);
+		
+		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JButton saveBtn = new JButton("Save");
+		buttonPanel.add(saveBtn);
+		saveBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) { calendar.addActivity(startHourTxt.getText(), startMinuteTxt.getText(), 
+					endHourTxt.getText(), endMinuteTxt.getText(), nameTxt.getText(), notesTxt.getText(), locTxt.getText());
+			update();
+			}
+		});
+		gridPanel.add(buttonPanel);
+		
+		JPanel namePanel = new JPanel();
+		namePanel.setLayout(new BorderLayout());
+		JLabel nameLbl = new JLabel("Activity:");
+		JTextField nameTxt = new JTextField();
+		namePanel.add(nameLbl, BorderLayout.NORTH);
+		namePanel.add(nameTxt, BorderLayout.CENTER);
+		gridPanel.add(namePanel);
+		
+		JPanel timePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel startPanel = new JPanel(new BorderLayout());
+		JLabel startLbl = new JLabel("Start:");
+		startHourTxt = new JTextField(3);
+		startMinuteTxt = new JTextField(3);
+		startPanel.add(startLbl, BorderLayout.NORTH);
+		startPanel.add(startHourTxt, BorderLayout.WEST);
+		startPanel.add(new JLabel(":"), BorderLayout.CENTER);
+		startPanel.add(startMinuteTxt, BorderLayout.EAST);
+		
+		JPanel endPanel = new JPanel(new BorderLayout());
+		JLabel endLbl = new JLabel("End:");
+		endHourTxt = new JTextField(3);
+		endMinuteTxt = new JTextField(3);
+		endPanel.add(endLbl, BorderLayout.NORTH);
+		endPanel.add(endHourTxt, BorderLayout.WEST);
+		endPanel.add(new JLabel(":"), BorderLayout.CENTER);
+		endPanel.add(endMinuteTxt, BorderLayout.EAST);
+		timePanel.add(startPanel);
+		timePanel.add(endPanel);
+		gridPanel.add(timePanel);
+		
+		JPanel locPanel = new JPanel();
+		locPanel.setLayout(new BorderLayout());
+		JLabel locLbl = new JLabel("Location:");
+		JTextField locTxt = new JTextField();
+		locPanel.add(locLbl, BorderLayout.NORTH);
+		locPanel.add(locTxt, BorderLayout.CENTER);
+		gridPanel.add(locPanel);
+		
+		JPanel notesPanel = new JPanel();
+		notesPanel.setLayout(new BorderLayout());
+		JLabel notesLbl = new JLabel("Notes:");
+		JTextField notesTxt = new JTextField(20);
+		notesPanel.add(notesLbl, BorderLayout.NORTH);
+		notesPanel.add(notesTxt, BorderLayout.CENTER);
+		largeGrid.add(notesPanel);
+		
+		newAct.add(flowPanel);
+		newAct.setVisible(true);
 	}
 	
 	private void update() {
@@ -140,7 +238,7 @@ public class Gui {
 			activitiesPanel.remove(activitiesList);
 		}
 		if (acts != null) {
-			activitiesList = new JList(acts);
+			activitiesList = new JList<Activity>(acts);
 			activitiesPanel.add(activitiesList);
 		}
 		int year = calendar.getCurrentYear();
@@ -151,13 +249,8 @@ public class Gui {
 		}
 		months.setSelectedIndex(month);
 		days.setSelectedIndex(day);
-		System.out.println(day);
+		
+		dateLbl.setText(year + " - " + (month + 1) + " - " + (day + 1));
 	}
 
 }
-
-
-
-
-
-
