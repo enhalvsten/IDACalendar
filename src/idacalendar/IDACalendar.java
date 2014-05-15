@@ -2,7 +2,6 @@ package idacalendar;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,10 +21,24 @@ public class IDACalendar {
 		@SuppressWarnings("unchecked")
 		List<Activity>[] t = new LinkedList[SIZE];
 		activities = t;
+		changeDate();
 	}
 
-	public void addActivity(int startHour, int startMinute, int endHour,
-			int endMinute, String title, String text, String place) {
+	public void addActivity(String startingHour, String startingMinute, String endingHour,
+			String endingMinute, String title, String text, String place) {
+		int startHour;
+		int startMinute;
+		int endHour;
+		int endMinute;
+		try {
+			startHour = Integer.parseInt(startingHour);
+			startMinute = Integer.parseInt(startingMinute);
+			endHour = Integer.parseInt(endingHour);
+			endMinute = Integer.parseInt(endingMinute);
+		}
+		catch (NumberFormatException e){
+			return;
+		}
 		if (startHour > 23 || startHour < 0 || startMinute > 59
 				|| startMinute < 0 || endHour > 23 || endHour < 0
 				|| endMinute > 59 || endMinute < 0) {
@@ -106,12 +119,13 @@ public class IDACalendar {
 	}
 
 	public void tomorrow() {
-		calendar.roll(Calendar.DATE, true);
+		calendar.add(Calendar.DATE, 1);
+		
 		changeDate();
 	}
 
 	public void yesterday() {
-		calendar.roll(Calendar.DATE, false);
+		calendar.add(Calendar.DATE, -1);
 		changeDate();
 	}
 
@@ -131,11 +145,11 @@ public class IDACalendar {
 		GregorianCalendar newCal = new GregorianCalendar(year, month, 1);
 		return newCal.getActualMaximum(Calendar.DAY_OF_MONTH);
 	}
-
+	
 	private void changeDate() {
 		year = calendar.get(Calendar.YEAR);
 		month = calendar.get(Calendar.MONTH);
-		day = calendar.get(Calendar.DATE);
+		day = calendar.get(Calendar.DAY_OF_MONTH);
 	}
 
 	private boolean compareDate(int year, int month, int day) {

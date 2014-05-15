@@ -1,4 +1,4 @@
-package INDACalendar;
+package idacalendar;
 
 import java.awt.event.*;
 import java.awt.*;
