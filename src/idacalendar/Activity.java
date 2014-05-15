@@ -5,8 +5,8 @@ package idacalendar;
  * It is possible to change the starting and ending times, title, text and place
  * of the activity.
  * 
- * @author Isak Stensö
- * @version 2014-05-02
+ * @author Isak Stensö, David Bergling & Andreas Rosenback
+ * @version 2014-05-15
  */
 
 public class Activity implements Comparable<Activity> {
@@ -106,34 +106,11 @@ public class Activity implements Comparable<Activity> {
 		place = newPlace;
 	}
 
-	public int getYear() {
-		return YEAR;
-	}
-
-	public int getMonth() {
-		return MONTH;
-	}
-
-	public int getDay() {
-		return DAY;
-	}
-
-	public int getStartHour() {
-		return startHour;
-	}
-
-	public int getStartMinute() {
-		return startMinute;
-	}
-
-	public int getEndHour() {
-		return endHour;
-	}
-
-	public int getEndMinute() {
-		return endMinute;
-	}
-
+	/**
+	 * Returns a string with the starting time.
+	 * 
+	 * @return The starting time.
+	 */
 	public String getStartTime() {
 		StringBuilder sb = new StringBuilder();
 		if (startHour == 0) {
@@ -154,14 +131,92 @@ public class Activity implements Comparable<Activity> {
 		return sb.toString();
 	}
 	
+	/**
+	 * Returns the year of the activity
+	 * 
+	 * @return The year of the activity. 
+	 */
+	public int getYear() {
+		return YEAR;
+	}
+
+	/**
+	 * Returns the month of the activity
+	 * 
+	 * @return The month of the activity. 
+	 */
+	public int getMonth() {
+		return MONTH;
+	}
+
+	/**
+	 * Returns the day of the activity
+	 * 
+	 * @return The day of the activity. 
+	 */
+	public int getDay() {
+		return DAY;
+	}
+
+	/**
+	 * Returns the starting hour of the activity
+	 * 
+	 * @return The starting hour of the activity. 
+	 */
+	public int getStartHour() {
+		return startHour;
+	}
+
+	/**
+	 * Returns the starting minute of the activity
+	 * 
+	 * @return The starting minute of the activity. 
+	 */
+	public int getStartMinute() {
+		return startMinute;
+	}
+
+	/**
+	 * Returns the ending hour of the activity
+	 * 
+	 * @return The ending hour of the activity. 
+	 */
+	public int getEndHour() {
+		return endHour;
+	}
+
+	/**
+	 * Returns the ending minute of the activity
+	 * 
+	 * @return The ending minute of the activity. 
+	 */
+	public int getEndMinute() {
+		return endMinute;
+	}
+	
+	/**
+	 * Returns the title of the activity
+	 * 
+	 * @return The title of the activity. 
+	 */
 	public String getTitle() {
 		return title;
 	}
 
+	/**
+	 * Returns the notes of the activity
+	 * 
+	 * @return The notes of the activity. 
+	 */
 	public String getText() {
 		return text;
 	}
 
+	/**
+	 * Returns the location of the activity
+	 * 
+	 * @return The location of the activity. 
+	 */
 	public String getPlace() {
 		return place;
 	}
@@ -174,7 +229,7 @@ public class Activity implements Comparable<Activity> {
 		Activity a = (Activity) o;
 		return a == this;
 	}
-
+	
 	public int compareTo(Activity a) {
 		int start = startHour * 60 + startMinute;
 		int otherStart = a.getStartHour() * 60 + a.getStartMinute();

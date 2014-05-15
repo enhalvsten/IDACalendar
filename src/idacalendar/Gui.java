@@ -2,9 +2,17 @@ package idacalendar;
 
 import java.awt.event.*;
 import java.awt.*;
-
 import javax.swing.*;
+import javax.swing.border.*;
 
+/**
+ * Represents the GUI of the calendar. It creates a window of the calendar, where the user can see
+ * the current date along with the activities of the day. It allows for changing dates as well as 
+ * creating, changing and removing activities.
+ * 
+ * @author Isak Stensö, David Bergling & Andreas Rosenback
+ * @version 2014-05-15
+ */
 public class Gui {
 	private IDACalendar calendar;
 
@@ -24,12 +32,8 @@ public class Gui {
 	private JTextField endHourTxt;
 	private JTextField endMinuteTxt;
 	private JTextField nameTxt;
-	private JTextField notesTxt;
+	private JTextArea notesTxt;
 	private JTextField locTxt;
-
-	public static void main(String[] args) {
-		new Gui();
-	}
 
 	public Gui() {
 		calendar = new IDACalendar();
@@ -264,7 +268,8 @@ public class Gui {
 		JPanel notesPanel = new JPanel();
 		notesPanel.setLayout(new BorderLayout());
 		JLabel notesLbl = new JLabel("Notes:");
-		notesTxt = new JTextField(20);
+		notesTxt = new JTextArea();
+		notesTxt.setBorder(new EtchedBorder());
 		notesPanel.add(notesLbl, BorderLayout.NORTH);
 		notesPanel.add(notesTxt, BorderLayout.CENTER);
 		largeGrid.add(notesPanel);
