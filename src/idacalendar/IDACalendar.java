@@ -23,7 +23,7 @@ public class IDACalendar {
 		activities = t;
 		changeDate();
 	}
-
+	
 	public void addActivity(String startingHour, String startingMinute, String endingHour,
 			String endingMinute, String title, String text, String place) {
 		int startHour;
